@@ -69,3 +69,13 @@ jobs:
           sudo apt update
           sudo apt-get install -y osc
           osc --help
+       - name: Set up OSC credentials
+         run: echo "${{ secrets.OSCRC }}" > ~/.config/osc/oscrc
+       - name: Checkout repo
+         run:  osc -A https://api.opensuse.org checkout home:sounddrill:branches:home:Personotfound:branches:home:win8linux/floorp-browser && cd $_ 
+       - name: Copy our Files
+         run: mv ${{ github.workspace }}/* .
+       - name: Trigger Build
+         run: |
+          osc add *
+          osc --non-interactive commit
