@@ -63,4 +63,4 @@ jobs:
           git config --global user.email 'sounddrill31@gmail.com'
           git add .
           git commit -m "Update Floorp browser to latest release"
-          git push -f --set-upstream origin v11.11.2
+          git push -f --set-upstream origin $latest_release
