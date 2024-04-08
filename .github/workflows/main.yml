@@ -71,11 +71,10 @@ jobs:
           osc --help
        - name: Set up OSC credentials
          run: mkdir -p ~/.config/osc; touch ~/.config/osc/oscrc; echo "${{ secrets.OSCRC }}" > ~/.config/osc/oscrc
-       - name: Checkout repo
-         run:  osc -A https://api.opensuse.org checkout home:sounddrill:branches:home:Personotfound:branches:home:win8linux/floorp-browser && cd $_ 
-       - name: Copy our Files
-         run: mv ${{ github.workspace }}/* . -f || true; rm -rf .git
        - name: Trigger Build
-         run: |
+         run:  |
+          osc -A https://api.opensuse.org checkout home:sounddrill:branches:home:Personotfound:branches:home:win8linux/floorp-browser && cd $_ 
+          mv ${{ github.workspace }}/* . -f || true
+          rm -rf .git
           osc add *
           osc commit
