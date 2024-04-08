@@ -70,7 +70,7 @@ jobs:
           sudo apt-get install -y osc
           osc --help
        - name: Set up OSC credentials
-         run: mkdir -p ~/.config/osc; touch ~/.config/osc/oscrc; echo "${{ secrets.OSCRC }}" > ~/.config/osc/oscrc
+         run: mkdir -p ~/.config/osc; touch ~/.config/osc/oscrc; echo "${{ secrets.OSCRC }}" > ~/.config/osc/oscrc; rm -rf .git
        - name: Checkout repo
          run:  osc -A https://api.opensuse.org checkout home:sounddrill:branches:home:Personotfound:branches:home:win8linux/floorp-browser && cd $_ 
        - name: Copy our Files
