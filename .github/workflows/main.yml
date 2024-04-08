@@ -78,4 +78,4 @@ jobs:
        - name: Trigger Build
          run: |
           osc add *
-          osc --non-interactive commit
+          osc commit
