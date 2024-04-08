@@ -40,7 +40,7 @@ jobs:
            sed -i "/$changelog_entry/a\
            - new version\
           
-             " floorp-brower-nosrc.spec   
+             " floorp-brower-nosrc.spec.example 
            echo "Increment example changelog"
            git config --global user.name 'sounddrill31'
            git config --global user.email 'sounddrill31@gmail.com'
