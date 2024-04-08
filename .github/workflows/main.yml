@@ -67,5 +67,5 @@ jobs:
        - name: Install build dependencies
          run: |
           sudo apt update
-          apt-get install -y osc
+          sudo apt-get install -y osc
           osc --help
