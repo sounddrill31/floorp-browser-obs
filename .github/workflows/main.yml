@@ -1,7 +1,7 @@
 name: Autoupdate Floorp version
 on:
   schedule:
-     - cron: '0 0 * * *' # This runs daily at midnight
+     - cron: '0 0 1 * *' # This runs on the first of every month
   workflow_dispatch:
 
 jobs:
