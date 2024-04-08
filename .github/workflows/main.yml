@@ -51,7 +51,8 @@ jobs:
            envsubst < ${PWD}/floorp-brower-nosrc.spec.example >> ${PWD}/floorp-brower-nosrc.spec
            envsubst < ${PWD}/_service.example >> ${PWD}/_service
            rm _service.example floorp-brower-nosrc.spec.example
-           
+         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
        - name: Commit and push changes
          if: ${{ env.latest_release != '' }}
