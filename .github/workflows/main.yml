@@ -73,7 +73,7 @@ jobs:
          run: mkdir -p ~/.config/osc; touch ~/.config/osc/oscrc; echo "${{ secrets.OSCRC }}" > ~/.config/osc/oscrc
        - name: Trigger Build
          run:  |
-          osc -A https://api.opensuse.org checkout home:sounddrill:branches:home:Personotfound:branches:home:win8linux/floorp-browser && cd $_ 
+          osc -A https://api.opensuse.org checkout home:sounddrill:branches:home:win8linux/floorp-browser && cd $_ 
           mv ${{ github.workspace }}/* . -f || true
           rm -rf .git
           osc add *
