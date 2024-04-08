@@ -36,11 +36,9 @@ jobs:
            export FLOORP_VER_NO_V=$(echo $FLOORP_VER | sed 's/^v//')
            changelog_entry="* ${FLOORP_BUILD_DAY} ${FLOORP_BUILD_DATE} tex - ${FLOORP_VER_NO_V}-1pclos${FLOORP_BUILD_YEAR}"
            echo "$changelog_entry"
-           sed -i "/%changelog/a $changelog_entry" floorp-brower-nosrc.spec.example
-           sed -i "/$changelog_entry/a\
+           sed -i "/%changelog/a $changelog_entry\
            - new version\
-          
-             " floorp-brower-nosrc.spec.example 
+            " floorp-brower-nosrc.spec.example
            echo "Increment example changelog"
            git config --global user.name 'sounddrill31'
            git config --global user.email 'sounddrill31@gmail.com'
@@ -62,5 +60,4 @@ jobs:
           git config --global user.email 'sounddrill31@gmail.com'
           git add .
           git commit -m "Update Floorp browser to latest release"
-          git push --set-upstream origin v11.11.2
- 
+          git push -f --set-upstream origin v11.11.2
