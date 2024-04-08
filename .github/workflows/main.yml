@@ -40,7 +40,7 @@ jobs:
               echo "Entry already exists, skipping"
            else
               sed -i "/%changelog/a $changelog_entry" floorp-brower-nosrc.spec.example 
-              sed -i "/$changelog_entry/a - new version" floorp-brower-nosrc.spec.example
+              sed -i "/$changelog_entry/a - new version\n" floorp-brower-nosrc.spec.example
             fi             
            echo "Increment example changelog"
            git config --global user.name 'sounddrill31'
