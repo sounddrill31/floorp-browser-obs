@@ -1,36 +1,65 @@
+name: Autoupdate Floorp version
 on:
- schedule:
-    - cron: '0 0 * * *' # This runs daily at midnight
- workflow_dispatch:
+  schedule:
+     - cron: '0 0 * * *' # This runs daily at midnight
+  workflow_dispatch:
 
-jobs:
- update:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Check for new Floorp releases
-        id: check_release
-        run: |
-          latest_release=$(curl -s https://api.github.com/repos/Floorp-Projects/Floorp/releases/latest | jq -r '.tag_name')
-          if [ -n "$latest_release" ]; then
-            echo "::set-output name=latest_release::$latest_release"
-            echo "latest release: $latest_release"
-          fi
-
-      #- name: Update _service and floorp-brower-nosrc.spec
-      #  if: steps.check_release.outputs.latest_release != ''
-      #  run: |
-      #    # Replace the placeholder with the actual logic to update the files
-      #    echo "Updating _service and floorp-brower-nosrc.spec with the new release URL"
-      #    # You might need to use a script or a tool to update the files based on the latest release
-
-      - name: Commit and push changes
-        if: steps.check_release.outputs.latest_release != ''
-        run: |
+ jobs:
+  update:
+     runs-on: ubuntu-latest
+     steps:
+       - name: Checkout repository
+         uses: actions/checkout@v4
+ 
+       - name: Check for new Floorp releases
+         id: check_release
+         run: |
+           latest_release=$(curl -s https://api.github.com/repos/Floorp-Projects/Floorp/releases/latest | jq -r '.tag_name')
+           if [ -n "$latest_release" ]; then
+             echo "::set-output name=latest_release::$latest_release"
+             echo "latest release: $latest_release"
+             echo "latest_release=$latest_release" >> "$GITHUB_ENV"
+           fi
+ 
+       - name: Update _service and floorp-brower-nosrc.spec
+         if: ${{ env.latest_release != '' }}
+         run: |
+           echo "Updating _service and floorp-brower-nosrc.spec with the new release URL"
+           echo "Doing changelog"
+           FLOORP_BUILD_DATE=$(date "+%b %d %Y")
+           echo "Build Date: $FLOORP_BUILD_DATE"
+           FLOORP_BUILD_DAY=$(date "+%a")
+           echo "Build Day: $FLOORP_BUILD_DAY"
+           FLOORP_BUILD_YEAR=$(date "+%Y") 
+           echo "Build Year: $FLOORP_BUILD_YEAR" 
+           FLOORP_VER=${latest_release}
+           FLOORP_VER_NO_V=$(echo $FLOORP_VER | sed 's/^v//')
+           changelog_entry="* ${FLOORP_BUILD_DAY} ${FLOORP_BUILD_DATE} tex - ${FLOORP_VER_NO_V}-1pclos${FLOORP_BUILD_YEAR}"
+           echo "$changelog_entry"
+           sed -i "/%changelog/a $changelog_entry" floorp-brower-nosrc.spec.example
+           sed -i "/$changelog_entry/a\
+           - new version\
+          
+             " floorp-brower-nosrc.spec   
+           echo "Increment example changelog"
+           git config --global user.name 'sounddrill31'
+           git config --global user.email 'sounddrill31@gmail.com'
+           git add .
+           git commit -m "Update Floorp browser to latest release"
+           git push         
+           echo "Using new version"
+           envsubst < ${PWD}/floorp-brower-nosrc.spec.example >> ${PWD}/floorp-brower-nosrc.spec
+           envsubst < ${PWD}/_service.example >> ${PWD}/_service
+           rm _service.example floorp-brower-nosrc.spec.example
+           
+  
+       - name: Commit and push changes
+         if: ${{ env.latest_release != '' }}
+         run: |
+          git checkout -b $latest_release
           git config --global user.name 'sounddrill31'
           git config --global user.email 'sounddrill31@gmail.com'
           git add .
           git commit -m "Update Floorp browser to latest release"
           git push
+ 

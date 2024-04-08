@@ -8,12 +8,12 @@
 
 Summary:	Floorp Web Browser
 Name:		floorp-browser
-Version:	11.7.1
+Version:	${FLOORP_VER}
 Release:	1
 License:	MPL-2.0
 Group:      Productivity/Networking/Web/Browsers
 URL:        https://floorp.app/
-# Source0:    https://github.com/Floorp-Projects/Floorp/releases/download/v%{version}/floorp-%{version}.linux-x86_64.tar.bz2
+# Source0:    https://github.com/Floorp-Projects/Floorp/releases/download/%{version}/floorp-%{version}.linux-x86_64.tar.bz2
 Source0:    floorp-%{version}.linux-x86_64.tar.bz2
 Source1:	%{oname}.png
 Source2:	%{oname}.desktop
