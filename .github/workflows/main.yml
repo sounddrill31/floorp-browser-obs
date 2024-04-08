@@ -77,4 +77,4 @@ jobs:
           mv ${{ github.workspace }}/* . -f || true
           rm -rf .git
           osc add *
-          osc commit
+          osc ci
