@@ -32,8 +32,8 @@ jobs:
            echo "Build Day: $FLOORP_BUILD_DAY"
            FLOORP_BUILD_YEAR=$(date "+%Y") 
            echo "Build Year: $FLOORP_BUILD_YEAR" 
-           FLOORP_VER=${latest_release}
-           FLOORP_VER_NO_V=$(echo $FLOORP_VER | sed 's/^v//')
+           export FLOORP_VER=${latest_release}
+           export FLOORP_VER_NO_V=$(echo $FLOORP_VER | sed 's/^v//')
            changelog_entry="* ${FLOORP_BUILD_DAY} ${FLOORP_BUILD_DATE} tex - ${FLOORP_VER_NO_V}-1pclos${FLOORP_BUILD_YEAR}"
            echo "$changelog_entry"
            sed -i "/%changelog/a $changelog_entry" floorp-brower-nosrc.spec.example
