@@ -41,7 +41,8 @@ jobs:
            \
            - new version\
 
-             " floorp-brower-nosrc.spec.example           echo "Increment example changelog"
+             " floorp-brower-nosrc.spec.example              
+           echo "Increment example changelog"
            git config --global user.name 'sounddrill31'
            git config --global user.email 'sounddrill31@gmail.com'
            git add .
