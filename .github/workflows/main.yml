@@ -8,6 +8,9 @@ jobs:
   check:
      runs-on: ubuntu-latest
      steps:
+       - name: Checkout repository
+         uses: actions/checkout@v4
+
        - name: Check for new Floorp releases
          id: check_release
          run: |
@@ -34,10 +37,7 @@ jobs:
   update:
      needs: check
      runs-on: ubuntu-latest
-     steps:
-       - name: Checkout repository
-         uses: actions/checkout@v4
- 
+     steps: 
        - name: Update _service and floorp-brower-nosrc.spec
          if: ${{ env.latest_release != '' }}
          run: |
