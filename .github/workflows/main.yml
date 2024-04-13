@@ -39,7 +39,6 @@ jobs:
      runs-on: ubuntu-latest
      steps: 
        - name: Update _service and floorp-brower-nosrc.spec
-         if: ${{ env.latest_release != '' }}
          run: |
            echo "Updating _service and floorp-brower-nosrc.spec with the new release URL"
            echo "Doing changelog"
@@ -73,7 +72,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
        - name: Commit and push changes
-         if: ${{ env.latest_release != '' }}
          run: |
           git checkout -b $latest_release
           git config --global user.name 'sounddrill31'
