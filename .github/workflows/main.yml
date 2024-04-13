@@ -5,69 +5,65 @@ on:
   workflow_dispatch:
 
 jobs:
-  check:
+  update:
      runs-on: ubuntu-latest
-     steps:
+     steps: 
        - name: Checkout repository
          uses: actions/checkout@v4
 
        - name: Check for new Floorp releases
          id: check_release
          run: |
-           latest_release=$(curl -s https://api.github.com/repos/Floorp-Projects/Floorp/releases/latest | jq -r '.tag_name')
-           latest_release_no_v=$(echo $latest_release | sed 's/^v//')
+          latest_release=$(curl -s https://api.github.com/repos/Floorp-Projects/Floorp/releases/latest | jq -r '.tag_name')
+          latest_release_no_v=$(echo $latest_release | sed 's/^v//')
 
-            if [ ! -f latest_version.txt ]; then
-              echo "$latest_release_no_v" > latest_version.txt
-              echo "Created latest_version.txt with $latest_release"
-            fi
+          if [ ! -f latest_version.txt ]; then
+            echo "$latest_release_no_v" > latest_version.txt
+            echo "Created latest_version.txt with $latest_release"
+          fi
 
-            current_version=$(cat latest_version.txt)
+          current_version=$(cat latest_version.txt)
 
-            if [[ "$latest_release_no_v" > "$current_version" ]]; then
-              echo "::set-output name=latest_release::$latest_release"
-              echo "latest release: $latest_release"
-              echo "latest_release=$latest_release" >> "$GITHUB_ENV"
-              echo "$latest_release_no_v" > latest_version.txt
-              echo "Updated latest_version.txt with $latest_release, triggering build..."
-            else
-              echo "No New Updates found"
-              exit 1
-            fi
-  update:
-     needs: check
-     runs-on: ubuntu-latest
-     steps: 
+          if [[ "$latest_release_no_v" > "$current_version" ]]; then
+            echo "::set-output name=latest_release::$latest_release"
+            echo "latest release: $latest_release"
+            echo "latest_release=$latest_release" >> "$GITHUB_ENV"
+            echo "$latest_release_no_v" > latest_version.txt
+            echo "Updated latest_version.txt with $latest_release, triggering build..."
+          else
+            echo "No New Updates found"
+            exit 1
+          fi
        - name: Update _service and floorp-brower-nosrc.spec
          run: |
-           echo "Updating _service and floorp-brower-nosrc.spec with the new release URL"
-           echo "Doing changelog"
-           FLOORP_BUILD_DATE=$(date "+%b %d %Y")
-           echo "Build Date: $FLOORP_BUILD_DATE"
-           FLOORP_BUILD_DAY=$(date "+%a")
-           echo "Build Day: $FLOORP_BUILD_DAY"
-           FLOORP_BUILD_YEAR=$(date "+%Y") 
-           echo "Build Year: $FLOORP_BUILD_YEAR" 
-           export FLOORP_VER=${latest_release}
-           export FLOORP_VER_NO_V=$(echo $FLOORP_VER | sed 's/^v//')
-           changelog_entry="* ${FLOORP_BUILD_DAY} ${FLOORP_BUILD_DATE} tex - ${FLOORP_VER_NO_V}-1pclos${FLOORP_BUILD_YEAR}"
-           echo "$changelog_entry"
-           if grep -q "$changelog_entry" floorp-brower-nosrc.spec.example; then
-              echo "Entry already exists, skipping"
-           else
-              sed -i "/%changelog/a $changelog_entry" floorp-brower-nosrc.spec.example 
-              sed -i "/$changelog_entry/a - new version\n" floorp-brower-nosrc.spec.example
-            fi             
-           echo "Increment example changelog"
-           git config --global user.name 'sounddrill31'
-           git config --global user.email 'sounddrill31@gmail.com'
-           git add .
-           git commit -m "Update Floorp browser to latest release"
-           git push         
-           echo "Using new version"
-           envsubst < ${PWD}/floorp-brower-nosrc.spec.example >> ${PWD}/floorp-brower-nosrc.spec
-           envsubst < ${PWD}/_service.example >> ${PWD}/_service
-           rm _service.example floorp-brower-nosrc.spec.example
+          echo "Updating _service and floorp-brower-nosrc.spec with the new release URL"
+          echo "Doing changelog"
+          FLOORP_BUILD_DATE=$(date "+%b %d %Y")
+          echo "Build Date: $FLOORP_BUILD_DATE"
+          FLOORP_BUILD_DAY=$(date "+%a")
+          echo "Build Day: $FLOORP_BUILD_DAY"
+          FLOORP_BUILD_YEAR=$(date "+%Y") 
+          echo "Build Year: $FLOORP_BUILD_YEAR" 
+          export FLOORP_VER=${latest_release}
+          export FLOORP_VER_NO_V=$(echo $FLOORP_VER | sed 's/^v//')
+          changelog_entry="* ${FLOORP_BUILD_DAY} ${FLOORP_BUILD_DATE} tex - ${FLOORP_VER_NO_V}-1pclos${FLOORP_BUILD_YEAR}"
+          echo "$changelog_entry"
+          if grep -q "$changelog_entry" floorp-brower-nosrc.spec.example; then
+            echo "Entry already exists, skipping"
+          else
+            sed -i "/%changelog/a $changelog_entry" floorp-brower-nosrc.spec.example 
+            sed -i "/$changelog_entry/a - new version\n" floorp-brower-nosrc.spec.example
+          fi           
+          echo "Increment example changelog"
+          git config --global user.name 'sounddrill31'
+          git config --global user.email 'sounddrill31@gmail.com'
+          git add .
+          git commit -m "Update Floorp browser to latest release"
+          git push         
+          echo "Using new version"
+          envsubst < ${PWD}/floorp-brower-nosrc.spec.example >> ${PWD}/floorp-brower-nosrc.spec
+          envsubst < ${PWD}/_service.example >> ${PWD}/_service
+          rm _service.example floorp-brower-nosrc.spec.example
          env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
