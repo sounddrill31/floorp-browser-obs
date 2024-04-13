@@ -1,25 +1,42 @@
 name: Autoupdate Floorp version
 on:
   schedule:
-     - cron: '0 0 1 * *' # This runs on the first of every month
+     - cron: '0 0 */10 * *' # This runs every 10 days
   workflow_dispatch:
 
 jobs:
-  update:
+  check:
      runs-on: ubuntu-latest
      steps:
-       - name: Checkout repository
-         uses: actions/checkout@v4
- 
        - name: Check for new Floorp releases
          id: check_release
          run: |
            latest_release=$(curl -s https://api.github.com/repos/Floorp-Projects/Floorp/releases/latest | jq -r '.tag_name')
-           if [ -n "$latest_release" ]; then
-             echo "::set-output name=latest_release::$latest_release"
-             echo "latest release: $latest_release"
-             echo "latest_release=$latest_release" >> "$GITHUB_ENV"
-           fi
+           latest_release_no_v=$(echo $latest_release | sed 's/^v//')
+
+            if [ ! -f latest_version.txt ]; then
+              echo "$latest_release_no_v" > latest_version.txt
+              echo "Created latest_version.txt with $latest_release"
+            fi
+
+            current_version=$(cat latest_version.txt)
+
+            if [[ "$latest_release_no_v" > "$current_version" ]]; then
+              echo "::set-output name=latest_release::$latest_release"
+              echo "latest release: $latest_release"
+              echo "latest_release=$latest_release" >> "$GITHUB_ENV"
+              echo "$latest_release_no_v" > latest_version.txt
+              echo "Updated latest_version.txt with $latest_release, triggering build..."
+            else
+              echo "No New Updates found"
+              exit 1
+            fi
+  update:
+     needs: check
+     runs-on: ubuntu-latest
+     steps:
+       - name: Checkout repository
+         uses: actions/checkout@v4
  
        - name: Update _service and floorp-brower-nosrc.spec
          if: ${{ env.latest_release != '' }}
