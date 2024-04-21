@@ -81,6 +81,9 @@ install -m 644 %{SOURCE2} %{buildroot}%{_datadir}/applications/%{oname}.desktop
 
 
 %changelog
+* Sun Apr 21 2024 tex - 11.12.1-1pclos2024
+- new version
+
 * Sat Apr 13 2024 tex - 11.11.2-1pclos2024
 - new version
 
