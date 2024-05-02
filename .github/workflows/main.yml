@@ -25,7 +25,6 @@ jobs:
           current_version=$(cat latest_version.txt)
 
           if [[ "$latest_release_no_v" > "$current_version" ]]; then
-            echo "::set-output name=latest_release::$latest_release"
             echo "latest release: $latest_release"
             echo "latest_release=$latest_release" >> "$GITHUB_ENV"
             echo "$latest_release_no_v" > latest_version.txt
