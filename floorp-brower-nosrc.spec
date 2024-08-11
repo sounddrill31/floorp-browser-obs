@@ -8,7 +8,7 @@
 
 Summary:	Floorp Web Browser
 Name:		floorp-browser
-Version:	${FLOORP_VER_NO_V}
+Version:	11.16.0
 Release:	1
 License:	MPL-2.0
 Group:      Productivity/Networking/Web/Browsers
