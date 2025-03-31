@@ -1,8 +1,0 @@
-<services>
-  <service name="download_url">
-    <param name="host">github.com</param>
-    <param name="protocol">https</param>
-    <param name="path">/Floorp-Projects/Floorp/releases/download/${FLOORP_VER}/floorp-${FLOORP_VER_NO_V}.linux-x86_64.tar.bz2</param>
-    <param name="filename">floorp-${FLOORP_VER_NO_V}.linux-x86_64.tar.bz2</param>
-  </service>
-</services>
